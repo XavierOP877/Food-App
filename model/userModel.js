@@ -7,7 +7,7 @@
 
 const mongoose = require('mongoose')
 const {Schema} = mongoose
-const pass = require("../model/secrets")
+const pass = require("./secret")
 
 let dbLink = `mongodb+srv://XavierOP:${pass}@cluster0.5n21gdy.mongodb.net/?retryWrites=true&w=majority`
 
