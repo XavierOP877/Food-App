@@ -7,7 +7,7 @@ async function profileController(req,res){
         const userId = req.userId;
         const user = await userModel.findById(userId);
         res.json({
-            data:user,
+            user:user,
             message:"data of logged in user is send"
         })
     }catch(err){

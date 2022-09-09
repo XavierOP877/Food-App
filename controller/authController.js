@@ -12,11 +12,12 @@ async function signupController(req,res){
         let newUser =await userModel.create(data);
         console.log(newUser);
         res.json({
-            message:"Data received",
-            data:data
+            result:"Data received",
         })}
         catch(err){
-            res.send(err.message)
+            res.status(500).json({
+                result:err.message
+            })
         }
 }
 
@@ -28,26 +29,30 @@ async function loginController(req,res){
         let {email,password} = data;
         if(email && password){
             let user =await userModel.findOne({email:email});
-            console.log(user);
+            
             if(user){
                 if(user.password == password){
                     //created jwt
                     const token = jwt.sign({data : user['_id']}, secretkey);
                     console.log(token);
                     res.cookie("JWT",token);
-                    res.send("User logged in");
+                    console.log(user);
+                    res.status(200).json({user})
                 }else{
-                    res.send("Login credentials does not match!!!")
+                    res.status(400).json({result:"Credential does not match"})
                 }
             }else{
-                res.send("User not found!! Kindly signup");
+                res.status(404).json({result:"User does not exist !! Kindly signup"})
             }
         }else{
-            res.send("Kindly enter your login credentials!!");
+            res.status(400).json({result:"Kindly enter your credentials!!"})
         }
 
     }catch(err){
-        console.log(err.message);
+        console.log("abc",err.message);
+        res.status(500).json({
+            result:err.message
+        })
     }
 }
 
@@ -66,7 +71,7 @@ async function forgetPasswordController(req,res){
             await user.save();
             res.json({
                 data:user,
-                "message":"otp sent to your mail"
+                "message":"OTP sent to your mail"
             })
         }else{
             res.json({
